@@ -94,6 +94,13 @@ namespace bb {
 			// read pack len
 			int len;
 			memcpy(&len, m_buf->begin(), LEN_SIZE);
+			if (len + HEADER_SIZE > transferred) {
+				// warning
+				m_buf->clear();
+				shutdown();
+				return;
+			}
+
 			// read pack type
 			int type;
 			memcpy(&type, (char *)m_buf->begin() + LEN_SIZE, TYPE_SIZE);

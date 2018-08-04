@@ -1,4 +1,4 @@
-LIBS=-lpthread -lboost_system -lboost_filesystem -lboost_context -lprotobuf
+LIBS=-lpthread -lboost_system -lboost_filesystem -lboost_context -lprotobuf -lmysqlcppconn
 CPPFLAG=-std=c++11 -g -Wall -O2
 INCLUDE=-I include -I src
 COMPILE=g++ -c

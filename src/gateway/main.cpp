@@ -4,25 +4,28 @@
 #include <iostream>
 #include <boost/uuid/uuid.hpp>  
 #include <boost/uuid/uuid_generators.hpp>  
-#include <boost/uuid/uuid_io.hpp>  
+#include <boost/uuid/uuid_io.hpp> 
+#include "framework/ConnectionPool.h"
+#include "framework/Connection.h"
 
 using namespace boost::uuids;  
 using namespace std;  
 
 void test_random();
 void test_random2();
+void test_db_connection();
 
 int main()
 {
-	boost::asio::io_service io_service;
+	/*boost::asio::io_service io_service;
 
 	tcp::endpoint p(tcp::v4(), 9384);
 	bb::TcpServer server(io_service, p);
 	server.accept();
 
 	io_service.run();
-	test_random2();
-
+	test_random2();*/
+	test_db_connection();
 	return 0;
 }
 
@@ -40,4 +43,15 @@ void test_random2()
 	for (int i = 0; i < 100; i++) {
 		std::cout << "random num: " << bb::MathUtil::random(poss, 5) << std::endl;
 	}
+}
+
+void test_db_connection()
+{
+	bb::Connection::ptr conn = bb::ConnectionPool::instance()->getConnection();
+	ResultSet *res = conn->query("select Host, user from user where user = ?;");
+	while (res->next()) {
+		int host = res->getInt(1);
+		std::string user = res->getString(2);
+		std::cout << "host, user: " << host << ", " << user << std::endl;
+	}	
 }

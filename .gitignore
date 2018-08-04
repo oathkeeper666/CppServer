@@ -1,6 +1,7 @@
 bin/*
 proto/*.h
 proto/*.cc
+proto/*.o
 src/common/*.o
 src/framework/*.o
 src/gateway/*.o
