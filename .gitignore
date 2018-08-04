@@ -4,3 +4,4 @@ proto/*.cc
 src/common/*.o
 src/framework/*.o
 src/gateway/*.o
+include/tiny/*.o
