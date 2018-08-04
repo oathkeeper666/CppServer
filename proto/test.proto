@@ -1,0 +1,46 @@
+syntax = "proto2";
+package Uqee.Protobufs.Peer.Protocol;
+option optimize_for = SPEED;
+
+enum RetCode {
+    RET_SUCCESS = 0;        // 成功
+    RET_PROTO_ERROR = 1;    // 解析Protobuf出错
+    RET_DEPEND = 2;         // 不满足依赖条件
+    RET_NOT_ENOUGH = 3;     // 资源不够
+    RET_INPUT_ERROR = 4;    // 输入信息有误
+    RET_INNER_ERROR = 5;    // 服务端内部错误
+    RET_EXIST = 6;          // 已经存在
+    RET_NOT_EXIST = 7;      // 目标不存在
+    RET_PERMIT = 8;         // 权限不足
+}
+
+enum ProtocolType {
+    C2S_ROOM_BASE       = 0;
+
+    C2S_KEEP_ALIVE		= 1;
+    S2C_KEEP_ALIVE		= 2;
+    C2S_ALL_ROOMS       = 3;
+    S2C_ALL_ROOMS       = 4;
+
+    C2S_CREATE_ROOM		= 101;
+    S2C_CREATE_ROOM		= 102;
+    C2S_UPDATE_FRAME	= 103;
+    S2C_UPDATE_FRAME	= 104;
+    C2S_END_ROOM		= 105;
+    S2C_END_ROOM		= 106;
+    C2S_READY           = 107;
+    S2C_READY           = 108;
+
+    S2C_FRAME_NOTIFY	= 180;
+    S2C_END_ROOM_NOTIFY = 181;
+
+    C2S_ROOM_TOP		= 200;
+}
+
+message C2S_KeepAliveReq {
+	optional ProtocolType type = 1 [default = C2S_KEEP_ALIVE];
+}
+
+message S2C_KeepAliveAck {
+	optional ProtocolType type = 1 [default = S2C_KEEP_ALIVE];
+}

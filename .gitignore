@@ -1,0 +1,6 @@
+bin/*
+proto/*.h
+proto/*.cc
+src/common/*.o
+src/framework/*.o
+src/gateway/*.o
