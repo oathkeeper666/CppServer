@@ -5,7 +5,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/signals2.hpp>
 #include <boost/asio.hpp>
-#include <list>
+#include <queue>
 
 using namespace boost;
 using namespace boost::asio;
@@ -21,7 +21,7 @@ namespace bb {
 		typedef boost::shared_ptr<Session> ptr;
 		typedef signals2::signal<void (Session::ptr)> signal_t;
 
-		Session(tcp::socket * sock);
+		Session(tcp::socket & sock);
 		virtual ~Session();
 
 		/*
@@ -52,13 +52,13 @@ namespace bb {
 		void asyncRead(void * begin, size_t n);
 
 	private:
-		tcp::socket *m_sock;
+		tcp::socket m_sock;
 		time_t m_lastHeartTime;
 		bool m_close;
 		shared_ptr<Buffer> m_buf;
-		shared_ptr<Pack> m_pack;				// incomplete pack
-		std::list<shared_ptr<Pack> > m_pending;	// waiting to handle
-		signal_t m_sig;							// close signal
+		shared_ptr<Pack> m_pack;					// incomplete pack
+		std::queue<shared_ptr<Pack> > m_pending;	// waiting to handle
+		signal_t m_sig;								// close signal
 	};
 }
 

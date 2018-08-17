@@ -9,7 +9,7 @@ GATEWAY=./bin/gateway
 all: $(GATEWAY) proto
 
 FRAMEWORK_SOURCE=$(wildcard src/framework/*.cpp)
-THIRD_PART_SOURCE=$(wildcard include/tiny/*.cpp)
+THIRD_PART_SOURCE=$(wildcard include/tiny/*.cpp include/dist/*.cpp include/dist/json/*.cpp)
 GATEWAY_SOUCE=$(wildcard src/gateway/*.cpp)
 PROTO_SOURCE=$(wildcard proto/*.cc)
 

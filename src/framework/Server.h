@@ -24,12 +24,13 @@ namespace bb {
 		void stop() { m_stop = true; }
 
 	private:
-		void handleConnection(tcp::socket * socket, const boost::system::error_code & error);
+		void handleConnection(const boost::system::error_code & error);
 		void handleDisconnection(boost::shared_ptr<Session> sess);
 
 	private:
 		io_service & m_service;
 		tcp::acceptor m_acceptor;
+		tcp::socket m_socket;								
 		std::set<boost::shared_ptr<Session> > m_sesses;
 		bool m_stop;
 	};

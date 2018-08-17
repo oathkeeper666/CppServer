@@ -19,8 +19,8 @@ const int MAX_PACK_LEN = 1024 * 10;					// 可以解析的最大包大小
 	}
 
 namespace bb {
-	Session::Session(tcp::socket * sock)
-		: m_sock(sock)
+	Session::Session(tcp::socket & sock)
+		: m_sock(std::move(sock))
 		,m_close(false)
 	{
 		m_buf.reset(new Buffer(BUFF_SIZE));
@@ -29,7 +29,7 @@ namespace bb {
 
 	Session::~Session()
 	{
-		delete m_sock;
+	
 	}
 
 	void Session::start()
@@ -40,7 +40,7 @@ namespace bb {
 
 	void Session::asyncRead(void *begin, size_t n)
 	{
-		m_sock->async_receive(boost::asio::buffer(begin, n),
+		m_sock.async_receive(boost::asio::buffer(begin, n),
 			boost::bind(&Session::readHandler, this, boost::asio::placeholders::error,
 				boost::asio::placeholders::bytes_transferred));
 	}
@@ -48,7 +48,7 @@ namespace bb {
 	void Session::sendData(const char * buffer, size_t n)
 	{
 		OPER_CHECK(m_close);
-		boost::asio::async_write(*m_sock, boost::asio::buffer(buffer, n), 
+		boost::asio::async_write(m_sock, boost::asio::buffer(buffer, n), 
 			boost::bind(&Session::writeHandler, this, boost::asio::placeholders::error,
 			boost::asio::placeholders::bytes_transferred));
 	}
@@ -65,7 +65,7 @@ namespace bb {
 		buffer->writeData(&type, TYPE_SIZE);
 		buffer->writeData(pack->begin(), pack->len());
 
-		boost::asio::async_write(*m_sock, boost::asio::buffer(buffer->begin(), buffer->size()),
+		boost::asio::async_write(m_sock, boost::asio::buffer(buffer->begin(), buffer->size()),
 			boost::bind(&Session::writeHandler, this, boost::asio::placeholders::error,
 				boost::asio::placeholders::bytes_transferred));
 	}
@@ -150,7 +150,7 @@ namespace bb {
 
 		if (m_pack->full()) {
 			std::cout << "receive data: " << std::endl;
-			m_pending.push_back(m_pack);
+			m_pending.push(m_pack);
 			m_pack.reset();
 		}
 
@@ -168,7 +168,7 @@ namespace bb {
 	{
 		// m_sock->shutdown(socket_base::shutdown_both);
 		try {
-			m_sock->close();
+			m_sock.close();
 			m_close = true;
 			m_sig(Session::ptr(shared_from_this()));	// emit signal
 		}
