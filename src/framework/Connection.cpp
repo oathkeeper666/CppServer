@@ -26,7 +26,7 @@ namespace bb {
         return statement->executeQuery();
     }*/
 
-    ResultSet *Connection::query(const std::string & sql, const std::initializer_list<boost::any> & args)
+    /*ResultSet *Connection::query(const std::string & sql, const std::initializer_list<boost::any> & args)
     {
         PreparedStatement *statement = m_conn->prepareStatement(sql);
         unsigned int i = 1;
@@ -49,5 +49,5 @@ namespace bb {
 
             }
         }
-    }
+    }*/
 }

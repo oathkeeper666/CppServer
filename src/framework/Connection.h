@@ -22,10 +22,10 @@ namespace bb {
 
             void close();
 
-            ResultSet *query(const std::string & sql, const std::initializer_list<boost::any> & args);
+            //ResultSet *query(const std::string & sql, const std::initializer_list<boost::any> & args);
 
-            template<typename T, typename T2>
-            ResultSet *query()
+            //template<typename T, typename T2>
+            //ResultSet *query()
 
         private:
             sql::Connection *m_conn;

@@ -24,8 +24,14 @@ namespace bb {
 		Session(tcp::socket * sock);
 		virtual ~Session();
 
+		/*
+			开启通信
+		*/
 		void start();
 
+		/*
+			将数据发给对端
+		*/
 		void sendData(const char * buffer, size_t n);
 		void sendData(const shared_ptr<Pack> & pack);
 

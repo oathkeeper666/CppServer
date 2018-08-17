@@ -25,7 +25,7 @@ int main()
 
 	io_service.run();
 	test_random2();*/
-	test_db_connection();
+	//test_db_connection();
 	return 0;
 }
 
@@ -45,7 +45,7 @@ void test_random2()
 	}
 }
 
-void test_db_connection()
+/*void test_db_connection()
 {
 	bb::Connection::ptr conn = bb::ConnectionPool::instance()->getConnection();
 	ResultSet *res = conn->query("select Host, user from user where user = ?;");
@@ -54,4 +54,4 @@ void test_db_connection()
 		std::string user = res->getString(2);
 		std::cout << "host, user: " << host << ", " << user << std::endl;
 	}	
-}
+}*/

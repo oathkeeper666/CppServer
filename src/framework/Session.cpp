@@ -6,11 +6,12 @@
 #include <boost/asio/write.hpp>
 #include <boost/bind.hpp>
 
-const int TIME_OUT = 60;
-const size_t BUFF_SIZE = 10;
-const size_t LEN_SIZE = 4;
-const size_t TYPE_SIZE = 4;
-const size_t HEADER_SIZE = LEN_SIZE + TYPE_SIZE;
+const int TIME_OUT = 60;							// 可以等待心跳信号的最大时间
+const size_t BUFF_SIZE = 512;						// 每次异步从socket中读取的数据长度
+const size_t LEN_SIZE = 4;							// 存储长度的字节数
+const size_t TYPE_SIZE = 4;							// 存储类型字段的字节数
+const size_t HEADER_SIZE = LEN_SIZE + TYPE_SIZE;	// 包头部大小
+const int MAX_PACK_LEN = 1024 * 10;					// 可以解析的最大包大小
 
 #define OPER_CHECK(f)	\
 	if (f) {			\
@@ -98,6 +99,13 @@ namespace bb {
 				// warning
 				m_buf->clear();
 				shutdown();
+				std::cout << "the pack size not enough." << std::endl;
+				return;
+			}
+			if (len > MAX_PACK_LEN) {
+				m_buf->clear();
+				shutdown();
+				std::cout << "the pack len is too bigger." << std::endl;
 				return;
 			}
 
@@ -151,7 +159,7 @@ namespace bb {
 
 	void Session::check()
 	{
-		if (TimeUtil::now() - m_lastHeartTime >= TIME_OUT) {
+		if (TimeUtil::now() - m_lastHeartTime > TIME_OUT) {
 			shutdown();
 		}
 	}
