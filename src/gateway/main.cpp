@@ -7,6 +7,7 @@
 #include <boost/uuid/uuid_io.hpp> 
 #include "framework/ConnectionPool.h"
 #include "framework/Connection.h"
+#include "common/gwconf.h"
 
 using namespace boost::uuids;  
 using namespace std;  
@@ -14,6 +15,7 @@ using namespace std;
 void test_random();
 void test_random2();
 void test_db_connection();
+void test_json();
 
 int main()
 {
@@ -26,6 +28,7 @@ int main()
 	io_service.run();
 	test_random2();*/
 	//test_db_connection();
+	test_json();
 	return 0;
 }
 
@@ -55,3 +58,11 @@ void test_random2()
 		std::cout << "host, user: " << host << ", " << user << std::endl;
 	}	
 }*/
+
+void test_json()
+{
+	common::GwConf *conf = common::GwConf::instance();
+	if (conf->loadRes("../conf/conf.json")) {
+		std::cout << conf->toString();
+	}
+}
