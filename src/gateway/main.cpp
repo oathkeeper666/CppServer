@@ -7,7 +7,7 @@
 #include <boost/uuid/uuid_io.hpp> 
 #include "framework/ConnectionPool.h"
 #include "framework/Connection.h"
-#include "common/gwconf.h"
+#include "gwconf.h"
 #include "resource.h"
 
 using namespace boost::uuids;  
@@ -67,7 +67,7 @@ void test_random2()
 
 void test_json()
 {
-	common::GwConf *conf = common::GwConf::instance();
+	gateway::GwConf *conf = gateway::GwConf::instance();
 	if (conf->loadRes("../conf/conf.json")) {
 		std::cout << conf->toString();
 	}

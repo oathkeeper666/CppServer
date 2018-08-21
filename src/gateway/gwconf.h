@@ -1,12 +1,12 @@
 #ifndef _GWCONF_H_
 #define _GWCONF_H_
 
-#include "loader.h"
+#include "common/loader.h"
 #include <string>
 
-namespace common
+namespace gateway
 {
-	class GwConf : public Loader
+	class GwConf : public common::Loader
 	{
 	public:
 		~GwConf();

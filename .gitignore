@@ -7,3 +7,4 @@ src/framework/*.o
 src/gateway/*.o
 include/tiny/*.o
 include/dist/*.o
+log/*

@@ -5,7 +5,7 @@
 #include <sstream>
 #include <iostream>
 
-namespace common 
+namespace gateway 
 {
 	GwConf::GwConf()
 	{

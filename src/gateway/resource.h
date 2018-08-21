@@ -4,6 +4,8 @@
 #include "spdlog/spdlog.h"
 #include <memory>
 
+#define LOGGER gateway::Resource::instance()->logger()
+
 namespace gateway {
 	class Resource
 	{
