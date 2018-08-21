@@ -14,6 +14,10 @@ namespace common
 		bool loadRes(const std::string & doc = 0);
 		std::string toString();
 
+		const std::string & logPath() const { return m_log; }
+		const std::string & listenIp() const { return m_ip; }
+		int port() const { return m_port; }
+
 	private:
 		GwConf();
 

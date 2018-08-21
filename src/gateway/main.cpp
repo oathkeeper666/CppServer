@@ -8,6 +8,7 @@
 #include "framework/ConnectionPool.h"
 #include "framework/Connection.h"
 #include "common/gwconf.h"
+#include "resource.h"
 
 using namespace boost::uuids;  
 using namespace std;  
@@ -28,7 +29,12 @@ int main()
 	io_service.run();
 	test_random2();*/
 	//test_db_connection();
-	test_json();
+	//test_json();
+	gateway::Resource * res = gateway::Resource::instance();
+	res->init();
+	auto logger = res->logger();
+	logger->info("first log info.");
+
 	return 0;
 }
 
