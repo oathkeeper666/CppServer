@@ -2,38 +2,51 @@
 #include "framework/MathUtil.h"
 #include "tiny/tinyxml2.h"
 #include <iostream>
-#include <boost/uuid/uuid.hpp>  
-#include <boost/uuid/uuid_generators.hpp>  
-#include <boost/uuid/uuid_io.hpp> 
 #include "framework/ConnectionPool.h"
 #include "framework/Connection.h"
 #include "gwconf.h"
 #include "resource.h"
+#include <unistd.h>
 
-using namespace boost::uuids;  
 using namespace std;  
 
 void test_random();
 void test_random2();
 void test_db_connection();
-void test_json();
 
-int main()
+int main(int argc, char *argv[])
 {
-	/*boost::asio::io_service io_service;
+	// cmd flag
+	bool isDaemon = false;
+	std::string path = "../conf/conf.json";
+	for (int i = 1; i < argc; i++) {
+		if (std::strcmp("-d", argv[i])) {
+			isDaemon = true;
+		} else if (std::strcmp("-c", argv[i]) && i != argc - 1) {
+			path = argv[i + 1];
+		}
+	}
 
+	// load conf
+	gateway::GwConf *conf = gateway::GwConf::instance();
+	if (!conf->loadRes(path)) {
+		exit(1);
+	}
+
+	// global resource
+	gateway::Resource * res = gateway::Resource::instance();
+	res->init(isDaemon);
+
+	// daemon
+	if (isDaemon) {
+		daemon(1, 0);
+	}
+
+	/*boost::asio::io_service io_service;
 	tcp::endpoint p(tcp::v4(), 9384);
 	bb::TcpServer server(io_service, p);
 	server.accept();
-
-	io_service.run();
-	test_random2();*/
-	//test_db_connection();
-	//test_json();
-	gateway::Resource * res = gateway::Resource::instance();
-	res->init();
-	auto logger = res->logger();
-	logger->info("first log info.");
+	io_service.run();*/
 
 	return 0;
 }
@@ -64,11 +77,3 @@ void test_random2()
 		std::cout << "host, user: " << host << ", " << user << std::endl;
 	}	
 }*/
-
-void test_json()
-{
-	gateway::GwConf *conf = gateway::GwConf::instance();
-	if (conf->loadRes("../conf/conf.json")) {
-		std::cout << conf->toString();
-	}
-}

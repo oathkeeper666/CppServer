@@ -12,7 +12,7 @@ namespace gateway {
 	public:
 		~Resource();
 		static Resource * instance();
-		void init();
+		void init(bool daemon = false);
 
 		std::shared_ptr<spdlog::logger> logger();
 

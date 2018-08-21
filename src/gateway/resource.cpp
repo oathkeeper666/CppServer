@@ -1,5 +1,8 @@
 #include "resource.h"
+#include "gwconf.h"
+#include "gateway.h"
 #include "spdlog/sinks/daily_file_sink.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace gateway {
 	Resource::Resource()
@@ -18,11 +21,17 @@ namespace gateway {
 		return &res;
 	}
 
-	void Resource::init()
+	void Resource::init(bool daemon)
 	{
+		GwConf *conf = GwConf::instance();
 		// log
-		m_logger = spdlog::daily_logger_mt("gateway", "../log/gateway.log", 4, 0);
-		m_logger->set_level(spdlog::level::trace);
+		if (daemon) {
+ 			m_logger = spdlog::daily_logger_mt(MODULE_NAME, conf->logPath() + MODULE_NAME + ".log", 4, 0);
+ 		} else {
+			m_logger = spdlog::stdout_color_mt(MODULE_NAME);
+ 		}
+ 		m_logger->set_level(spdlog::level::trace);
+		spdlog::flush_every(std::chrono::seconds(REFRESH_INTERVAL));
 	}
 
 	std::shared_ptr<spdlog::logger> Resource::logger()
