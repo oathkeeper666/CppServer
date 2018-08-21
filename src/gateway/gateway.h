@@ -7,4 +7,7 @@
 // refresh frequency
 #define REFRESH_INTERVAL 10
 
+// thread count
+#define THREAD_COUNT 4
+
 #endif // _GATEWAY_H_
