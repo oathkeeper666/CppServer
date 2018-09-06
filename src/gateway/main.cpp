@@ -1,52 +1,69 @@
-#include "framework/Server.h"
-#include "framework/MathUtil.h"
-#include "tiny/tinyxml2.h"
-#include <iostream>
-#include "framework/ConnectionPool.h"
-#include "framework/Connection.h"
-#include "gwconf.h"
-#include "resource.h"
-#include <unistd.h>
-
-using namespace std;  
+#include "gateway.h"
 
 void test_random();
 void test_random2();
 void test_db_connection();
 
+class GateApp : public bb::Application
+{
+public:
+	GateApp(int argc, char *argv[]) 
+		: bb::Application(argc, argv)
+	{
+
+	}
+	~GateApp() {}
+
+	void initLogger(gateway::GwConf *conf)
+	{
+		bb::LogConfig info;
+		info.m_module = "gateway";
+    	info.m_path = conf->logPath();
+    	info.m_level = 1;
+    	info.m_daemon = isDaemon();
+    	info.m_flush_sec = 10;
+		bb::Logger * logger = bb::Singleton<bb::Logger>::instance();
+		logger->init(info);
+	}
+
+	void run() override 
+	{
+		// load conf
+		std::string conf_path = "../conf/conf.json";
+		if (path() != "") {
+			conf_path = path();
+		}
+		gateway::GwConf *conf = bb::Singleton<gateway::GwConf>::instance();
+		if (!conf->loadRes(conf_path)) {
+			exit(1);
+		}
+
+		// init logger
+		initLogger(conf);
+
+		// global resource
+		gateway::Resource * res = bb::Singleton<gateway::Resource>::instance();
+		if (!res->load()) {
+			exit(1);
+		}
+
+		bb::Application::run();
+	}
+
+private:
+
+};
+
 int main(int argc, char *argv[])
 {
-	// cmd flag
-	bool isDaemon = false;
-	std::string path = "../conf/conf.json";
-	for (int i = 1; i < argc; i++) {
-		if (std::strcmp("-d", argv[i])) {
-			isDaemon = true;
-		} else if (std::strcmp("-c", argv[i]) && i != argc - 1) {
-			path = argv[i + 1];
-		}
-	}
-
-	// load conf
-	gateway::GwConf *conf = gateway::GwConf::instance();
-	if (!conf->loadRes(path)) {
-		exit(1);
-	}
-
-	// global resource
-	gateway::Resource * res = gateway::Resource::instance();
-	res->init(isDaemon);
-
-	// daemon
-	if (isDaemon) {
-		daemon(1, 0);
-	}
-
+	GateApp app(argc, argv);
+	app.run();
 	/*boost::asio::io_service io_service;
 	tcp::endpoint p(tcp::v4(), 9384);
 	bb::TcpServer server(io_service, p);
 	server.accept();
 	io_service.run();*/
+
 
 	return 0;
 }

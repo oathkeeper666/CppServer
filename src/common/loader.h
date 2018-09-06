@@ -5,7 +5,7 @@
 
 namespace common 
 {
-	class Loader
+	class ILoader
 	{
 		virtual bool loadRes(const std::string & file) = 0;	
 	};

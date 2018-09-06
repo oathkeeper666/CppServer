@@ -17,12 +17,6 @@ namespace gateway
 
 	}
 
-	GwConf * GwConf::instance()
-	{
-		static GwConf conf;
-		return &conf;
-	}
-
 	bool GwConf::loadRes(const std::string & doc)
 	{
 		char buf[2048] = { '\0' };

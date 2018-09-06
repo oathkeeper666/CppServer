@@ -28,7 +28,7 @@ $(GATEWAY): $(FRAMEWORK_OBJ) $(THIRD_PART_OBJ) $(GATEWAY_OBJ) $(PROTO_OBJ) $(COM
 	$(LINK) $@ $^ $(LIBS)
 
 $(FRAMEWORK_OBJ): %.o: %.cpp
-	$(COMPILE) $(CPPFLAG) -o $@ $<
+	$(COMPILE) $(CPPFLAG) $(INCLUDE) -o $@ $<
 
 $(THIRD_PART_OBJ): %.o: %.cpp
 	$(COMPILE) $(CPPFLAG) -o $@ $<
