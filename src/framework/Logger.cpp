@@ -16,6 +16,7 @@ namespace bb
 
     void Logger::init(const LogConfig & info)
     {
+        m_conf = info;
 		if (info.m_daemon) {
  			m_logger = spdlog::daily_logger_mt(info.m_module, info.m_path + info.m_module + ".log", 4, 0);
  		} else {
@@ -25,5 +26,8 @@ namespace bb
 		spdlog::flush_every(std::chrono::seconds(info.m_flush_sec));
     }
 
-    
+    std::shared_ptr<spdlog::logger> & Logger::logger()
+    {
+        return m_logger;
+    }
 }

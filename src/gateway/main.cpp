@@ -33,17 +33,15 @@ public:
 		if (path() != "") {
 			conf_path = path();
 		}
-		gateway::GwConf *conf = bb::Singleton<gateway::GwConf>::instance();
-		if (!conf->loadRes(conf_path)) {
+		if (!GATE_INS->loadRes(conf_path)) {
 			exit(1);
 		}
 
 		// init logger
-		initLogger(conf);
+		initLogger(GATE_INS);
 
 		// global resource
-		gateway::Resource * res = bb::Singleton<gateway::Resource>::instance();
-		if (!res->load()) {
+		if (!RESOURCE_INS->load()) {
 			exit(1);
 		}
 

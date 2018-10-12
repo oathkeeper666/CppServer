@@ -7,12 +7,14 @@ namespace gateway {
 	public:
 		Resource();
 		~Resource();
-		
+
 		bool load();
 
 	private:
 		
 	};
 }
+
+#define RESOURCE_INS bb::Singleton<gateway::Resource>::instance()
 
 #endif // _RESOURCE_H_

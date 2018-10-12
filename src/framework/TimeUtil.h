@@ -3,6 +3,8 @@
 
 #include <boost/noncopyable.hpp>
 
+extern time_t g_now;
+
 namespace bb {
 	class TimeUtil : public boost::noncopyable
 	{

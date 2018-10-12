@@ -3,7 +3,13 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/asio.hpp>
-#include <set>
+#include <string>
+#include <thread>
+#include <vector>
+#include <mutex>
+#include <queue>
+#include <map>
+#include "IRunnable.h"
 
 using namespace boost;
 using namespace boost::asio;
@@ -11,28 +17,68 @@ using namespace boost::asio::ip;
 
 namespace bb {
 	class Session;
+	class WorkThread;
+	class IoThread;
 
-	class TcpServer
+	struct ServerConf 
+	{
+		std::string ip;
+		int port;
+		bool ipv6;
+		size_t io_count;
+
+		std::string address() 
+		{
+			return ip + ":" + std::to_string(port);
+		}
+
+		ServerConf(const std::string & ip, int port, size_t count, bool ipv6 = false) 
+		{
+			this->ip = ip;
+			this->port = port;
+			this->io_count = count;
+			this->ipv6 = ipv6;
+		}
+
+		ServerConf() 
+		{
+			ip = "";
+			port = 0;
+			io_count = 0;
+			ipv6 = false;
+		}
+	};
+
+	class TcpServer : public IRunnable
 	{
 	public:
 		typedef shared_ptr<TcpServer> ptr;
+		TcpServer(const ServerConf & conf);
+		virtual ~TcpServer();
 
-		TcpServer(io_service & service, tcp::endpoint & endPoint);
-		~TcpServer();
-
-		void accept();
-		void stop() { m_stop = true; }
-
-	private:
-		void handleConnection(const boost::system::error_code & error);
-		void handleDisconnection(boost::shared_ptr<Session> sess);
+		void aync_accept();
+		virtual void run();
+		virtual void stop();
+		virtual void update();
 
 	private:
-		io_service & m_service;
+		void handleConnection(boost::shared_ptr<tcp::socket> & sock, const boost::system::error_code & error);
+		void handleDisconnection(int sessId);
+
+		void saveSession(boost::shared_ptr<tcp::socket> & sock);
+
+	private:
+		io_service m_service;
 		tcp::acceptor m_acceptor;
-		tcp::socket m_socket;								
-		std::set<boost::shared_ptr<Session> > m_sesses;
-		bool m_stop;
+		tcp::socket m_socket;							
+		int m_sess_id;						// auto increase
+		ServerConf m_conf;
+		std::mutex m_sess_mtx;
+		std::map<int, boost::shared_ptr<Session> > m_sesses;
+		std::mutex m_accept_mxt;
+		std::queue<boost::shared_ptr<tcp::socket> > m_accept_socks;
+		boost::shared_ptr<WorkThread> m_work_thread;
+		std::vector<boost::shared_ptr<IoThread> > m_io_threads;
 	};
 }
 

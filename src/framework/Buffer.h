@@ -22,11 +22,7 @@ namespace bb {
 		size_t available() const;
 		void clear();
 		void clearHead(size_t n);
-		void erase(void * begin, void * end);
-
 		void writeData(void * p, size_t n);
-
-	private:
 		void resize();
 
 	private:

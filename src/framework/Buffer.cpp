@@ -104,9 +104,4 @@ namespace bb {
 		m_offset = (char *)m_addr + n;
 		free(old);
 	}
-
-	void Buffer::erase(void * begin, void * end)
-	{
-
-	}
 }

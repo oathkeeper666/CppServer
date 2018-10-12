@@ -28,4 +28,6 @@ namespace gateway
 	};
 }
 
+#define GATE_INS bb::Singleton<gateway::GwConf>::instance()
+
 #endif // _GWCONF_H_
